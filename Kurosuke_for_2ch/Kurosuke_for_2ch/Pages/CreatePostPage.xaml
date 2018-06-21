@@ -1,0 +1,48 @@
+﻿<Page
+    x:Class="Kurosuke_for_2ch.Pages.CreatePostPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kurosuke_for_2ch.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="Azure">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Azure" Click="BackButtonClicked">
+                <SymbolIcon Symbol="Back"></SymbolIcon>
+            </Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Thread.Name}"/>
+                <TextBlock VerticalAlignment="Center">に書き込み</TextBlock>
+            </StackPanel>
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,2,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding Path=name, Mode=TwoWay}" FontSize="25" VerticalAlignment="Stretch"></TextBox>
+                <TextBox Grid.Column="1" Margin="2,0,2,0" Text="{Binding Path=mail, Mode=TwoWay}" FontSize="25" VerticalAlignment="Stretch"></TextBox>
+                <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="20" Click="SendButtonClicked">書き込む</Button>
+            </Grid>
+            <TextBox Grid.Row="1" Text="{Binding Path=message, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
+        </Grid>
+    </Grid>
+</Page>

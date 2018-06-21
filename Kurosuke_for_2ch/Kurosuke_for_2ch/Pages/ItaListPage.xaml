@@ -1,0 +1,129 @@
+﻿<Page
+    x:Class="Kurosuke_for_2ch.Pages.ItaListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kurosuke_for_2ch.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:selector="using:Kurosuke_for_2ch.Selectors"
+    NavigationCacheMode="Enabled"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="CategoryListTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Margin="48,0,0,0" FontSize="20">板一覧（カテゴリ）</TextBlock>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Path=CategoryList}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <CommandBar Grid.Row="2" Height="70">
+                        <AppBarButton Click="RefreshItaListButton" Icon="Refresh" Label="更新" VerticalAlignment="Stretch" HorizontalAlignment="Right"></AppBarButton>
+                    </CommandBar>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ItaListTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="{Binding Path=Category.Name}" FontSize="20"></TextBlock>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Path=Category.Itas}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontSize="15" Text="{Binding Path=Name}"/>
+                                    <TextBlock FontSize="13" Foreground="Gray" Text="{Binding Path=Url}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ThreadListTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="48,0,0,0" Orientation="Horizontal" Grid.Row="0">
+                        <TextBlock FontSize="20" Text="{Binding Path=Ita.Name}"></TextBlock>
+                        <TextBlock FontSize="20" Margin="10,0,0,0">スレッド一覧</TextBlock>
+                    </StackPanel>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Path=ThreadList}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="PostListTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="48,0,0,0" Orientation="Vertical" Grid.Row="0">
+                        <TextBlock FontSize="20" Text="{Binding Path=Thread.Name}"></TextBlock>
+                    </StackPanel>
+                    <ListBox Grid.Row="1" x:Name="PostListBox" ItemsSource="{Binding Path=Thread.Posts}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="FontSize" Value="17"/>
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <TextBlock Text="{Binding Path=Id}"/>
+                                        <TextBlock Margin="5,0,0,0" Text="{Binding Path=Name}"/>
+                                        <TextBlock Margin="5,0,0,0" Text="{Binding Path=MailTo}"/>
+                                        <TextBlock Margin="5,0,0,0" Text="{Binding Path=Date}"/>
+                                    </StackPanel>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=Message}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <CommandBar Grid.Row="2" Height="70">
+                        <AppBarButton Click="ToCreatePostPageButtonClicked" Label="書き込み" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                            <Image Source="/Assets/Icons/write.png"></Image>
+                        </AppBarButton>
+                        <AppBarButton Click="ScrollToTheEnd" Label="最後尾へ" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                            <Image Source="/Assets/Icons/scroll.png"></Image>
+                        </AppBarButton>
+                        <AppBarButton Click="RefreshPostList" Icon="Refresh" Label="更新" VerticalAlignment="Stretch" HorizontalAlignment="Right"></AppBarButton>
+                    </CommandBar>
+                </Grid>
+            </DataTemplate>
+
+            <selector:ItaListPageFlipSelector x:Key="ItaFlipSelector" 
+                                              CategoryListTemplate="{StaticResource ResourceKey=CategoryListTemplate}"
+                                              ItaListTemplate="{StaticResource ItaListTemplate}"
+                                              ThreadListTemplate="{StaticResource ThreadListTemplate}"
+                                              ThreadTemplate="{StaticResource PostListTemplate}"
+                                              ></selector:ItaListPageFlipSelector>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid x:Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <FlipView x:Name="MainFlip" ItemsSource="{Binding Path=FlipList}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemTemplateSelector="{StaticResource ResourceKey=ItaFlipSelector}">
+        </FlipView>
+    </Grid>
+</Page>
